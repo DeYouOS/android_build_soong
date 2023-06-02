@@ -73,6 +73,11 @@ func (installer *baseInstaller) installDir(ctx ModuleContext) android.InstallPat
 	if ctx.toolchain().Is64Bit() && installer.dir64 != "" {
 		dir = installer.dir64
 	}
+	if installer.installInRoot() {
+		dir = ""
+	} else if installer.installInXbin() {
+		dir = "xbin"
+	}
 	if ctx.Target().NativeBridge == android.NativeBridgeEnabled {
 		dir = filepath.Join(dir, ctx.Target().NativeBridgeRelativePath)
 	} else if !ctx.Host() && ctx.Config().HasMultilibConflict(ctx.Arch().ArchType) {
